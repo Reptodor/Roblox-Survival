@@ -6,11 +6,25 @@ public class PlayerMovement
     private float _speed;
     private float _forwardInput;
     private float _strafeInput;
+    private bool _isMoving;
 
     public PlayerMovement(Rigidbody rigidbody, float speed)
     {
         _rigidbody = rigidbody;
         _speed = speed;
+    }
+
+    public bool IsMoving()
+    {
+        if (_rigidbody.velocity.magnitude == 0)
+        {
+            _isMoving = false;
+        }
+        else
+        {
+            _isMoving = true;
+        }
+        return _isMoving;
     }
 
     public void Move()

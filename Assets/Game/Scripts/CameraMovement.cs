@@ -7,7 +7,7 @@ public class CameraMovement : MonoBehaviour
     [Range(1, 10)]
     [SerializeField] private float _smoothFactor;
 
-    public void FixedUpdate() => Follow();
+    private void FixedUpdate() => Follow();
 
     private void Follow()
     {

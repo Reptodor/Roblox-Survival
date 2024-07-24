@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class PlayerAttacker
 {
     private int _damage;

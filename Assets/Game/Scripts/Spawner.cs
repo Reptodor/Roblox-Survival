@@ -21,6 +21,11 @@ public abstract class Spawner : MonoBehaviour
 
     public abstract void Spawn();
     
+    public void IncreaseCharacteristics()
+    {
+        _maximumSpawnCount++;
+        _minimumSpawnCount++;
+    }
 
     protected int GetSpawnCount()
     {

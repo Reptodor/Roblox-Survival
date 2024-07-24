@@ -3,7 +3,10 @@ using UnityEngine;
 
 public class EnemiesFactory : MonoBehaviour
 {
+    [SerializeField] private Spawner _spawner;
     [SerializeField] private Enemy _enemy;
+    [SerializeField] private int _health;
+    [SerializeField] private int _damage;
     [SerializeField] private float _spawnDistance;
 
     private SpawnPointGenerator _spawnPointGenerator;
@@ -11,8 +14,9 @@ public class EnemiesFactory : MonoBehaviour
 
     private List<Enemy> _enemies;
 
+
     public List<Enemy> Enemies() => _enemies;
-    
+
     private void Awake()
     {
         _player = FindAnyObjectByType<Player>();
@@ -28,20 +32,27 @@ public class EnemiesFactory : MonoBehaviour
         Destroy(enemy.gameObject);
     }
 
+    public void Complicate()
+    {
+        _health++;
+        _spawner.IncreaseCharacteristics();
+    }
+
     public List<Enemy> Create(int enemyCount)
     {
-        for(int i = 0; i < enemyCount; i++)
+        for (int i = 0; i < enemyCount; i++)
             _enemies.Add(Create());
-        
+
         return _enemies;
     }
 
     private Enemy Create()
     {
-        Enemy enemy = Instantiate(_enemy, _spawnPointGenerator.Generate(_player.transform.position), Quaternion.identity);
-        enemy.Initialize(_player);
+        var spawnPoint = _spawnPointGenerator.Generate(_player.transform.position);
+        Enemy enemy = Instantiate(_enemy, spawnPoint, Quaternion.identity);
+        enemy.Initialize(_player, this, _health, _damage);
 
         return enemy;
-    }
 
+    }
 }

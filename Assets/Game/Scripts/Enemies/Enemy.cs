@@ -2,29 +2,38 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent (typeof(Collider))]
+[RequireComponent(typeof(Collider))]
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private int _damage;
     [SerializeField] private float _damageDistance = 2f;
     [SerializeField] private float _damageCooldown;
 
     private NavMeshAgent _enemy;
     private Player _player;
+    private EnemyHealth _enemyHealth;
 
     private bool _canAttack;
 
-    public void Initialize(Player player)
+    private int _damage;
+
+    public void Initialize(Player player, EnemiesFactory enemiesFactory, int health, int damage)
     {
         _enemy = GetComponent<NavMeshAgent>();
         _player = player;
         _canAttack = true;
+        _enemyHealth = GetComponent<EnemyHealth>();
+
+        _damage = damage;
+
+        _enemyHealth.Initialize(this, enemiesFactory);
+        _enemyHealth.SetHealth(health);
+        transform.LookAt(_player.transform.position);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        ChasePlayer();
         DamagePlayer();
+        ChasePlayer();
     }
 
     private void ChasePlayer()

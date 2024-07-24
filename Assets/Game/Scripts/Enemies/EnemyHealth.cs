@@ -1,21 +1,29 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    [SerializeField] private Enemy _enemy;
-    [SerializeField] private int _health;
-
+    private Enemy _enemy;
     private EnemiesFactory _enemiesFactory;
     private HealthDisplay _healthDisplay;
+    private AudioSource _hitSound;
 
+    private int _baseHealth;
     private int _currentHealth;
 
-    private void Awake()
+    public void Initialize(Enemy enemy, EnemiesFactory enemiesFactory)
     {
-        _enemiesFactory = FindAnyObjectByType<EnemiesFactory>();
+        _enemy = enemy;
+        _enemiesFactory = enemiesFactory;
         _healthDisplay = GetComponent<HealthDisplay>();
-        _currentHealth = _health;
+        _hitSound = GetComponent<AudioSource>();
+    }
+
+    public void SetHealth(int health)
+    {
+        _currentHealth = health;
+        _baseHealth = health;
     }
 
     public void TakeDamage(int damage)
@@ -24,10 +32,21 @@ public class EnemyHealth : MonoBehaviour
             throw new ArgumentOutOfRangeException(nameof(damage));
 
         _currentHealth -= damage;
-        float healthPercantage = (float)_currentHealth / _health;
+        _hitSound.Play();
+        float healthPercantage = (float)_currentHealth / _baseHealth;
         _healthDisplay.Display(healthPercantage);
 
         if (_currentHealth <= 0)
-            _enemiesFactory.DestroyEnemy(_enemy);
+        {
+            StartCoroutine(Die());
+        }
+    }
+
+    private bool IsHitSoundPlay() => _hitSound.isPlaying;
+
+    private IEnumerator Die()
+    {
+        yield return new WaitWhile(IsHitSoundPlay);
+        _enemiesFactory.DestroyEnemy(_enemy);
     }
 }

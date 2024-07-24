@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent (typeof(CapsuleCollider))]
 public class Player : MonoBehaviour
 {
+    [SerializeField] private Gun[] _guns;
     [SerializeField] private int _baseHealth;
     [SerializeField] private int _healAmount;
     [SerializeField] private int _damage;
@@ -12,12 +13,13 @@ public class Player : MonoBehaviour
     [SerializeField] private float _rotationSpeed;
 
     private PlayerMovement _playerMovement;
+    private PlayerAnimations _playerAnimations;
     private Health _health;
     private HealthDisplay _healthDisplay;
     private StatsChanger _statsChanger;
     private PlayerAttacker _playerAttacker;
-
-    private Gun _gun;
+    private AudioSource _hitSound;
+    private Animator _animator;
 
     private Rigidbody _rigidbody;
 
@@ -28,6 +30,9 @@ public class Player : MonoBehaviour
         Damaged += _health.RecieveDamage;
         _health.HealthChanged += _healthDisplay.Display;
         _health.Died += Death;
+
+        Gun gun = _guns[1];
+        gun.UziOutOfBullets += TakePistol;
     }
 
     private void OnDisable()
@@ -35,6 +40,9 @@ public class Player : MonoBehaviour
         Damaged -= _health.RecieveDamage;
         _health.HealthChanged -= _healthDisplay.Display;
         _health.Died -= Death;
+
+        Gun gun = _guns[1];
+        gun.UziOutOfBullets -= TakePistol;
     }
 
     private void Awake()
@@ -42,23 +50,37 @@ public class Player : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _rigidbody.freezeRotation = true;
 
-        _gun = GetComponentInChildren<Gun>();
         _healthDisplay = GetComponent<HealthDisplay>();
+        _hitSound = GetComponent<AudioSource>();
+        _animator = GetComponentInChildren<Animator>();
 
         _playerMovement = new PlayerMovement(_rigidbody, _speed);
-        _health = new Health(_baseHealth);
+        _health = new Health(_baseHealth, _hitSound);
         _playerAttacker = new PlayerAttacker(_damage);
         _statsChanger = new StatsChanger(_playerMovement, _playerAttacker);
+        _playerAnimations = new PlayerAnimations(_animator);
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         _playerMovement.Move();
         transform.rotation = Quaternion.Lerp(transform.rotation, _playerMovement.Rotate(), _rotationSpeed);
-        Debug.Log(_playerAttacker.Damage());
+        _playerAnimations.MoveAnimation(_playerMovement.IsMoving());
     }
 
     public int CurrentDamage() => _playerAttacker.Damage();
+
+    public void TakeUzi()
+    {
+        _guns[0].gameObject.SetActive(false);
+        _guns[1].gameObject.SetActive(true);
+    }
+
+    public void TakePistol()
+    {
+        _guns[1].gameObject.SetActive(false);
+        _guns[0].gameObject.SetActive(true);
+    }
 
     public void Boost(int boosterIndex, float boostMultiplier, float boostTime)
     {
@@ -72,6 +94,9 @@ public class Player : MonoBehaviour
                 break;
             case 2:
                 _health.Heal(_healAmount);
+                break;
+            case 3:
+                TakeUzi();
                 break;
         }
     }
