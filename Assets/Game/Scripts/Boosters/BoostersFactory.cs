@@ -9,11 +9,13 @@ public class BoostersFactory : MonoBehaviour
     [SerializeField] private float _boostTime;
 
     private SpawnPointGenerator _spawnPointGenerator;
+    private BoosterSpawner _boosterSpawner;
     private Player _player;
 
     private void Awake()
     {
         _player = FindAnyObjectByType<Player>();
+        _boosterSpawner = FindAnyObjectByType<BoosterSpawner>();    
         _spawnPointGenerator = new SpawnPointGenerator(_spawnDistance);
     }
 
@@ -36,8 +38,9 @@ public class BoostersFactory : MonoBehaviour
     private Booster Create()
     {
         int boosterIndex = ChooseBooster();
-        Booster booster = Instantiate(_boosters[boosterIndex], _spawnPointGenerator.Generate(_player.transform.position), Quaternion.identity);
-        booster.Initialize(_player, boosterIndex, _boostMultiplier, _boostTime);
+        Quaternion rotation = _boosters[boosterIndex].transform.rotation;
+        Booster booster = Instantiate(_boosters[boosterIndex], _spawnPointGenerator.Generate(_player.transform.position), rotation);
+        booster.Initialize(_player, _boosterSpawner, boosterIndex, _boostMultiplier, _boostTime);
 
         return booster;
     }

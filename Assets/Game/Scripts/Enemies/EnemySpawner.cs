@@ -6,6 +6,11 @@ public class EnemySpawner : Spawner
 
     public override void Spawn()
     {
-        _enemiesFactory.Create(GetSpawnCount());
+        if(SpawnedCount < MaximumCount)
+        {
+            int spawnCount = GetSpawnCount();
+            _enemiesFactory.Create(spawnCount);
+            SpawnedCount += spawnCount;
+        }
     }
 }

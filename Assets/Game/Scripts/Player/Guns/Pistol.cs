@@ -1,12 +1,7 @@
-using UnityEngine;
-
 public class Pistol : Gun
 {
-    private void Update()
+    public override void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            Shoot();
-        }        
+        base.Update();  
     }
 }

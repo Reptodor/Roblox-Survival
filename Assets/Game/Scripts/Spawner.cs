@@ -8,6 +8,10 @@ public abstract class Spawner : MonoBehaviour
 
     private float _counter;
 
+    [SerializeField] protected int MaximumCount;
+    
+    [HideInInspector] public int SpawnedCount = 0;
+
     private void Update()
     {
         _counter += Time.deltaTime;
@@ -20,12 +24,6 @@ public abstract class Spawner : MonoBehaviour
     }
 
     public abstract void Spawn();
-    
-    public void IncreaseCharacteristics()
-    {
-        _maximumSpawnCount++;
-        _minimumSpawnCount++;
-    }
 
     protected int GetSpawnCount()
     {

@@ -10,6 +10,7 @@ public class EnemiesFactory : MonoBehaviour
     [SerializeField] private float _spawnDistance;
 
     private SpawnPointGenerator _spawnPointGenerator;
+    private EnemySpawner _enemySpawner;
     private Player _player;
 
     private List<Enemy> _enemies;
@@ -20,6 +21,7 @@ public class EnemiesFactory : MonoBehaviour
     private void Awake()
     {
         _player = FindAnyObjectByType<Player>();
+        _enemySpawner = FindAnyObjectByType<EnemySpawner>();
 
         _spawnPointGenerator = new SpawnPointGenerator(_spawnDistance);
 
@@ -29,13 +31,13 @@ public class EnemiesFactory : MonoBehaviour
     public void DestroyEnemy(Enemy enemy)
     {
         _enemies.Remove(enemy);
+        _enemySpawner.SpawnedCount--;
         Destroy(enemy.gameObject);
     }
 
     public void Complicate()
     {
         _health++;
-        _spawner.IncreaseCharacteristics();
     }
 
     public List<Enemy> Create(int enemyCount)

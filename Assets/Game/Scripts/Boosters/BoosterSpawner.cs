@@ -6,6 +6,11 @@ public class BoosterSpawner : Spawner
 
     public override void Spawn()
     {
-        boostersFactory.Create(GetSpawnCount());
+        if(SpawnedCount < MaximumCount)
+        {
+            int spawnCount = GetSpawnCount();
+            boostersFactory.Create(spawnCount);
+            SpawnedCount += spawnCount;
+        }
     }
 }

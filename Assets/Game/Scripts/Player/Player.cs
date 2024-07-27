@@ -6,6 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private Gun[] _guns;
+    [SerializeField] private DeathMenu _deathMenu;
     [SerializeField] private int _baseHealth;
     [SerializeField] private int _healAmount;
     [SerializeField] private int _damage;
@@ -103,6 +104,7 @@ public class Player : MonoBehaviour
 
     private void Death()
     {
-        this.gameObject.SetActive(false); 
+        this.gameObject.SetActive(false);
+        _deathMenu.gameObject.SetActive(true);
     }
 }

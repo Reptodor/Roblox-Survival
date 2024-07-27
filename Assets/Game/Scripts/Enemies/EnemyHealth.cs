@@ -6,6 +6,7 @@ public class EnemyHealth : MonoBehaviour
 {
     private Enemy _enemy;
     private EnemiesFactory _enemiesFactory;
+    private EnemySpawner _enemySpawner;
     private HealthDisplay _healthDisplay;
     private AudioSource _hitSound;
 

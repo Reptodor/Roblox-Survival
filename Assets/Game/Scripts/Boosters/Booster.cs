@@ -6,15 +6,17 @@ public class Booster : MonoBehaviour
     [SerializeField] private float _groundDistance;
     
     private Player _player;
+    private BoosterSpawner _boosterSpawner;
     private int _index;
     private float _boostMultiplier;
     private float _boostTime;
 
     private bool _grounded;
 
-    public void Initialize(Player player, int index,float bustMultiplier, float boostTime)
+    public void Initialize(Player player, BoosterSpawner boosterSpawner, int index,float bustMultiplier, float boostTime)
     {
         _player = player;
+        _boosterSpawner = boosterSpawner;
         _index = index;
         _boostMultiplier = bustMultiplier;
         _boostTime = boostTime;
@@ -36,6 +38,7 @@ public class Booster : MonoBehaviour
         if(other.gameObject == _player.gameObject)
         {
             _player.Boost(_index, _boostMultiplier, _boostTime);
+            _boosterSpawner.SpawnedCount--;
             Destroy(gameObject);
         }
     }
