@@ -11,6 +11,9 @@ public class Enemy : MonoBehaviour
     private NavMeshAgent _enemy;
     private Player _player;
     private EnemyHealth _enemyHealth;
+    private EnemiesFactory _enemyFactory;
+
+    private Vector3 _spawnpoint;
 
     private bool _canAttack;
 
@@ -22,12 +25,17 @@ public class Enemy : MonoBehaviour
         _player = player;
         _canAttack = true;
         _enemyHealth = GetComponent<EnemyHealth>();
+        _enemyFactory = enemiesFactory;
 
         _damage = damage;
 
         _enemyHealth.Initialize(this, enemiesFactory);
         _enemyHealth.SetHealth(health);
         transform.LookAt(_player.transform.position);
+
+        _spawnpoint = transform.position;
+
+        StartCoroutine(SpawnCheck());
     }
 
     private void FixedUpdate()
@@ -55,5 +63,15 @@ public class Enemy : MonoBehaviour
         _canAttack = false;
         yield return new WaitForSeconds(_damageCooldown);
         _canAttack = true;
+    }
+
+    private IEnumerator SpawnCheck()
+    {
+        yield return new WaitForSeconds(2f);
+
+        if(transform.position == _spawnpoint)
+        {
+            _enemyFactory.DestroyEnemy(this);
+        }
     }
 }

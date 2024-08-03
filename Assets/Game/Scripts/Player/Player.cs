@@ -88,16 +88,13 @@ public class Player : MonoBehaviour
         switch (boosterIndex)
         {
             case 0:
-                StartCoroutine(_statsChanger.IncreaseSpeed(_speed, boostMultiplier, boostTime));
+                TakeUzi();
                 break;
             case 1:
                 StartCoroutine(_statsChanger.IncreaseDamage(_damage, boostMultiplier, boostTime));
                 break;
             case 2:
                 _health.Heal(_healAmount);
-                break;
-            case 3:
-                TakeUzi();
                 break;
         }
     }
