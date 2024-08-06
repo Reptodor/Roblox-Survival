@@ -5,6 +5,8 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Collider))]
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] private AudioSource[] _enemySounds;
+    [SerializeField] private float _soundDistance;
     [SerializeField] private float _damageDistance = 2f;
     [SerializeField] private float _damageCooldown;
 
@@ -16,6 +18,7 @@ public class Enemy : MonoBehaviour
     private Vector3 _spawnpoint;
 
     private bool _canAttack;
+    private bool _canUseSound;
 
     private int _damage;
 
@@ -36,10 +39,13 @@ public class Enemy : MonoBehaviour
         _spawnpoint = transform.position;
 
         StartCoroutine(SpawnCheck());
+
+        _canUseSound = true;
     }
 
     private void FixedUpdate()
     {
+        PlaySound();
         DamagePlayer();
         ChasePlayer();
     }
@@ -47,6 +53,16 @@ public class Enemy : MonoBehaviour
     private void ChasePlayer()
     {
         _enemy.SetDestination(_player.transform.position);
+    }
+
+    private void PlaySound()
+    {
+        if(Vector3.Distance(_enemy.transform.position, _player.transform.position) < _soundDistance && _canUseSound)
+        {
+            var soundIndex = Random.Range(0, 2);
+            _enemySounds[soundIndex].Play();
+            _canUseSound = false;
+        }
     }
 
     private void DamagePlayer()
