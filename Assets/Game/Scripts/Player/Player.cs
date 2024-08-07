@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using YG;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent (typeof(CapsuleCollider))]
@@ -103,5 +104,6 @@ public class Player : MonoBehaviour
     {
         this.gameObject.SetActive(false);
         _deathMenu.gameObject.SetActive(true);
+        YandexGame.FullscreenShow();
     }
 }
