@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using YG;
 
 public class DeathMenu : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class DeathMenu : MonoBehaviour
     public void Restart()
     {
         var currentScene = SceneManager.GetActiveScene().buildIndex;
+        YandexGame.FullscreenShow();
         SceneManager.LoadScene(currentScene);
     }
 

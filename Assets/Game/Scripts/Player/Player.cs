@@ -104,6 +104,5 @@ public class Player : MonoBehaviour
     {
         this.gameObject.SetActive(false);
         _deathMenu.gameObject.SetActive(true);
-        YandexGame.FullscreenShow();
     }
 }
